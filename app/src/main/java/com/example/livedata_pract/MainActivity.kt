@@ -1,6 +1,7 @@
 package com.example.livedata_pract
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,17 +13,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.livedata_pract.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 //    private var score = 0
     private lateinit var viewModel: ScoreViewModel
 
+
+    //binding 1: init Activity Binding from the layout name
+    lateinit var binding : ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
 
-//        updateScoreText() // Initial update
+        //binding 2: use the activity main binding inside on-create
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //instead of setContentView(R.layout.activity_main)
+
+      // updateScoreText() // Initial update
 
 
         //1. Initialize ViewModel
@@ -30,13 +40,23 @@ class MainActivity : AppCompatActivity() {
 
         //2. Observe LiveData : score is the LiveData object we’re observing
         viewModel.score.observe(this) { score ->
-            findViewById<TextView>(R.id.scoreText).text = "Score: $score"
+//  findViewById<TextView>(R.id.scoreText).text = "Score: $score"  //old way of findViewByID
+            //binding 3: new binding way:
+            binding.scoreText.text = "Score: $score"
+
         }
 
         //3. Button click updates LiveData
-        findViewById<Button>(R.id.btnIncrease).setOnClickListener {
+        binding.btnIncrease.setOnClickListener {
+
             viewModel.increaseScore()
         }
+
+        binding.btnClear.setOnClickListener {
+            viewModel.clearScore()
+        }
+
+
 
 
         //boilerplate to take fullscreen - ignore
@@ -55,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 //    }
 
 //    private fun updateScoreText() {
-//        findViewById<TextView>(R.id.scoreText).text = "Score: $score"
+//        binding.scoreText.text = "Score: $score"
 //    }
 
 }

@@ -17,4 +17,8 @@ class ScoreViewModel : ViewModel() {
     fun increaseScore() {
         _score.value = (_score.value ?: 0) + 1
     }
+
+    fun clearScore() {
+        _score.value = 0
+    }
 }
